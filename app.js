@@ -1,10 +1,10 @@
 'use strict';
 
-
 const fs = require('fs');
 const readline = require('readline');
 const rs = fs.createReadStream('./popu-pref.csv');
 const rl = readline.createInterface({ input: rs, output: {} });
+const prefectureDataMap = new Map();
 
 rl.on('line', lineString => {
   const columns = lineString.split(',');
@@ -12,9 +12,24 @@ rl.on('line', lineString => {
   const prefecture = columns[1];
   const popu = parseInt(columns[3]);
   if (year === 2010 || year === 2015) {
-    console.log(year);
-    console.log(prefecture);
-    console.log(popu);
+    let value = prefectureDataMap.get(prefecture);
+    if (!value) {
+      value = {
+        popu10: 0,
+        popu15: 0,
+        change: null
+      };
+    }
+    if (year === 2010) {
+      value.popu10 = popu;
+    }
+    if (year === 2015) {
+      value.popu15 = popu;
+    }
+    prefectureDataMap.set(prefecture, value);
   }
+});
 
+rl.on('close', () => {
+  console.log(prefectureDataMap);
 });
