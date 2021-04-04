@@ -34,5 +34,9 @@ rl.on('close', () => {
   for (let[key, value] of prefectureDataMap) {
     value.change = value.popu15 / value.popu10;
   }
-  console.log(prefectureDataMap);
+  const rankingArray = Array.from(prefectureDataMap).sort((pair1, pair2) => {
+    return pair2[1].change - pair1[1].change;
+  });
+  //console.log(prefectureDataMap);
+  console.log(rankingArray);
 });
